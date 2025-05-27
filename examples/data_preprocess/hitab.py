@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     data_source = "hitab"
 
-    dataset = datasets.load_from_disk("/storage/Vanilla_RL_data")
+    dataset = datasets.load_dataset("/storage/RL_data_source")
 
     train_dataset = dataset["train"]
     test_dataset = dataset["validation"]

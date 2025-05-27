@@ -649,10 +649,18 @@ class RayPPOTrainer:
         for key_info, lst in reward_extra_infos_dict.items():
             assert len(lst) == 0 or len(lst) == len(sample_scores), f"{key_info}: {len(lst)=}, {len(sample_scores)=}"
 
+        correct_flags = [1.0 if score > 0 else 0.0 for score in sample_scores]
+        acc_gt0 = sum(correct_flags) / len(correct_flags) if correct_flags else 0.0
+
+        # 初始化 metric_dict 并加入 acc_gt0 指标
+        metric_dict = {
+            "val-core/reward/acc_gt0": acc_gt0
+        }
+
         data_sources = np.concatenate(data_source_lst, axis=0)
 
         data_src2var2metric2val = process_validation_metrics(data_sources, sample_inputs, reward_extra_infos_dict)
-        metric_dict = {}
+
         for data_source, var2metric2val in data_src2var2metric2val.items():
             core_var = "acc" if "acc" in var2metric2val else "reward"
             for var_name, metric2val in var2metric2val.items():
